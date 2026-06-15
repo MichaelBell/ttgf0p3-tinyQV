@@ -17,6 +17,8 @@ jobs:
         uses: TinyTapeout/tt-gds-action@ttgf26a
         with:
           pdk: gf180mcuD
+          tools-repo: 'MichaelBell/tt-support-tools'
+          tools-ref: 'analog-def'
 
   precheck:
     needs: gds
