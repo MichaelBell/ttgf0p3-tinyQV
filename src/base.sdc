@@ -17,13 +17,13 @@ set_input_delay -clock [get_clocks $::env(CLOCK_PORT)] -max $input_setup_delay_v
 set_input_delay -clock [get_clocks $::env(CLOCK_PORT)] -min $input_hold_delay_value {uio_in ui_in}
 
 # Longer output delay on bidi IOs to improve coherence
-set output_setup_delay_value [expr $::env(CLOCK_PERIOD) * 0.6]
+set output_setup_delay_value [expr $::env(CLOCK_PERIOD) * 0.55]
 set output_hold_delay_value 1
 set_output_delay -clock [get_clocks $::env(CLOCK_PORT)] -max $output_setup_delay_value {uio_out[7] uio_out[6] uio_out[5] uio_out[4] uio_out[2] uio_out[1] uio_out[0] uio_oe}
 set_output_delay -clock [get_clocks $::env(CLOCK_PORT)] -min $output_hold_delay_value {uio_out uio_oe}
 
 # Lower delay on SPI clock output because it can be driven at negedge for timing tweaking
-set spi_clk_setup_delay_value [expr $::env(CLOCK_PERIOD) * 0.15]
+set spi_clk_setup_delay_value [expr $::env(CLOCK_PERIOD) * 0.14]
 set_output_delay -clock [get_clocks $::env(CLOCK_PORT)] -max $spi_clk_setup_delay_value {uio_out[3]}
 
 # Delays on user outputs
