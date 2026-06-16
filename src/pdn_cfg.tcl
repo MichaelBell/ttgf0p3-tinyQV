@@ -100,7 +100,7 @@ add_pdn_connect \
 # Connect met2 pads on macro from met4 stripes
 add_pdn_connect \
 	-grid macro \
-    -layers "Metal2 Metal4"
+    -layers "Metal3 Metal4"
 
 # Allow unrepaired PDN channels to be warnings instead of errors.
 # Must be called after grids are defined since it iterates over existing grids.

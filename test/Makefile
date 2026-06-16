@@ -1,45 +1,50 @@
-# Makefile
-# See https://docs.cocotb.org/en/stable/quickstart.html for more info
+USER_PERIPHERAL_2 = uart
+USER_PERIPHERAL_3 = game_pmod
+USER_PERIPHERAL_4 = 
+USER_PERIPHERAL_5 = pwl_synth.test
+USER_PERIPHERAL_6 = 
+USER_PERIPHERAL_7 = 
+USER_PERIPHERAL_8 = spi
+USER_PERIPHERAL_9 = 
+USER_PERIPHERAL_10 = matt_pwm.test
+USER_PERIPHERAL_11 = 
+USER_PERIPHERAL_12 = 
+USER_PERIPHERAL_13 = 
+USER_PERIPHERAL_14 = 
+USER_PERIPHERAL_15 = 
 
-# defaults
-SIM ?= icarus
-FST ?= -fst # Use more efficient FST format
-TOPLEVEL_LANG ?= verilog
-SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = project.v
+expand_tests = $(foreach num,$(1),$(USER_PERIPHERAL_$(num)))
+PERI_NUMBERS = $(shell seq 2 15)
+ALL_TESTS = $(call expand_tests,$(PERI_NUMBERS))
 
-ifneq ($(GATES),yes)
+.PHONY: clean core prog peri_test_% peri_num_% $(ALL_TESTS)
 
-# RTL simulation:
-SIM_BUILD				= sim_build/rtl
-VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,$(PROJECT_SOURCES))
+%-results.xml:
+	@make -f test_$*.mk clean
+	make -f test_$*.mk
+	@mv results.xml $@
+	@mv sim_build/rtl/tb*.fst $*-rtl.fst || true
+	@mv sim_build/gl/tb*.fst $*-gl.fst || true
 
-else
+peri-%.xml:
+	@make -f test_basic.mk clean
+	COCOTB_TEST_MODULES=user_peripherals.$* make -f test_basic.mk || true
+	@if [ ! -f results.xml ]; then echo '<failure message="$* failed (crashed)" />' > results.xml; fi
+	@mv results.xml $@
+	@mv sim_build/rtl/tb.fst $*-rtl.fst || true
+	@mv sim_build/gl/tb.fst $*-gl.fst || true
 
-# Gate level simulation:
-SIM_BUILD				= sim_build/gl
-COMPILE_ARGS    += -DGL_TEST
-COMPILE_ARGS    += -DFUNCTIONAL
-COMPILE_ARGS    += -DUSE_POWER_PINS
-COMPILE_ARGS    += -DSIM
-COMPILE_ARGS    += -DUNIT_DELAY=\#1
-VERILOG_SOURCES += $(PDK_ROOT)/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog/primitives.v
-VERILOG_SOURCES += $(PDK_ROOT)/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog/gf180mcu_fd_sc_mcu7t5v0.v
+$(ALL_TESTS): %: peri-%.xml
 
-# this gets copied in by the GDS action workflow
-VERILOG_SOURCES += $(PWD)/gate_level_netlist.v
+clean:
+	rm *results.xml peri-*.xml *.fst sim_build/rtl/tb.fst sim_build/gl/tb.fst || true
 
-endif
+core: clean basic-results.xml
+	@cat *results.xml > results.xml
 
-# Allow sharing configuration between design and testbench via `include`:
-COMPILE_ARGS 		+= -I$(SRC_DIR)
+prog: clean prog-results.xml
+	@cat *results.xml > results.xml
 
-# Include the testbench sources:
-VERILOG_SOURCES += $(PWD)/tb.v
-TOPLEVEL = tb
-
-# List test modules to run, separated by commas and without the .py suffix:
-COCOTB_TEST_MODULES = test
-
-# include cocotb's make rules to take care of the simulator setup
-include $(shell cocotb-config --makefiles)/Makefile.sim
+.SECONDEXPANSION:
+peri_num_%: clean $$(call expand_tests,%)
+	@if [ "$(USER_PERIPHERAL_$*)" != "" ]; then cat peri-*.xml; else echo '<testsuites name="results" />'; fi > results.xml

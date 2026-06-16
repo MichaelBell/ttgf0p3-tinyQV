@@ -245,7 +245,7 @@ module tt_um_MichaelBell_tinyQV #(parameter CLOCK_KHZ=24000) (
     // Read data
     always @(*) begin
         case (connect_peripheral)
-            PERI_ID:          data_from_read = "WS02";
+            PERI_ID:          data_from_read = "GF.3";
             PERI_GPIO_OUT_SEL:data_from_read = {24'h0, gpio_out_sel, 6'h0};
             PERI_DEBUG_UART_STATUS: data_from_read = {31'h0, debug_uart_tx_busy};
             PERI_TIME_LIMIT:  data_from_read = {25'h0, time_limit, 2'b11};
@@ -260,8 +260,8 @@ module tt_um_MichaelBell_tinyQV #(parameter CLOCK_KHZ=24000) (
     // GPIO Out
     always @(posedge clk) begin
         if (!rst_reg_n) begin
-            gpio_out_sel <= 2'b11;
-            time_limit <= 5'd5;
+            gpio_out_sel <= {!ui_in[0], 1'b0};
+            time_limit <= (CLOCK_KHZ / 4000 - 1);
         end
         if (write_n != 2'b11) begin
             if (connect_peripheral == PERI_GPIO_OUT_SEL) gpio_out_sel <= data_to_write[7:6];
@@ -331,7 +331,11 @@ module tt_um_MichaelBell_tinyQV #(parameter CLOCK_KHZ=24000) (
     end
 
     wire [7:0] dac_buffered;
+    `ifdef SIM
+    assign dac_buffered = dac_data;
+    `else
     gf180mcu_fd_sc_mcu7t5v0__buf_4 dac_buf [7:0] (.I(dac_data), .Z(dac_buffered));
+    `endif
 
     /* verilator lint_off PINMISSING */
     r2r i_r2r(

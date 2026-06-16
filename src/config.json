@@ -13,19 +13,19 @@
 
   "//": "PL_TARGET_DENSITY_PCT - You can increase this if Global Placement fails with error GPL-0302.",
   "//": "Users have reported that values up to 80 worked well for them.",
-  "PL_TARGET_DENSITY_PCT": 60,
+  "PL_TARGET_DENSITY_PCT": 72,
 
   "//": "CLOCK_PERIOD - Increase this in case you are getting setup time violations.",
   "//": "The value is in nanoseconds, so 20ns == 50MHz.",
-  "CLOCK_PERIOD": 20,
+  "CLOCK_PERIOD": 40,
 
   "//": "Hold slack margin - Increase them in case you are getting hold violations.",
-  "PL_RESIZER_HOLD_SLACK_MARGIN": 0.1,
-  "GRT_RESIZER_HOLD_SLACK_MARGIN": 0.05,
+  "PL_RESIZER_HOLD_SLACK_MARGIN": 0.05,
+  "GRT_RESIZER_HOLD_SLACK_MARGIN": 0.0,
 
   "//": "Setup slack margin - set resizer to ignore the slow corners, but add plenty of margin.",
-  "PL_RESIZER_SETUP_SLACK_MARGIN": 4.0,
-  "GRT_RESIZER_SETUP_SLACK_MARGIN": 3.5,
+  "PL_RESIZER_SETUP_SLACK_MARGIN": 4.5,
+  "GRT_RESIZER_SETUP_SLACK_MARGIN": 4.0,
   "RSZ_CORNERS": [
       "nom_tt_025C_3v30",
       "nom_ff_n40C_3v60",
@@ -49,7 +49,7 @@
     "r2r": {
       "instances": {
         "i_r2r": {
-          "location": [280.2, 20.0],
+          "location": [269.0, 5.0],
           "orientation": "N"
         }
       },
@@ -60,9 +60,8 @@
   },
 
   "PDN_CFG": "dir::pdn_cfg.tcl",
-  "//PDN_MACRO_CONNECTIONS": ["i_r2r VPWR VGND VPWR VGND"],
-  "VDD_NETS": ["VPWR"],
-  "GND_NETS": ["VGND"],
+  "FP_MACRO_HORIZONTAL_HALO": 3,
+  "FP_MACRO_VERTICAL_HALO": 3,
 
   "//": "SDC Customizations",
   "FALLBACK_SDC_FILE": "dir::base.sdc",
