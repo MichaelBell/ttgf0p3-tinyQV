@@ -39,15 +39,28 @@ jobs:
 
   gl_test:
     needs: gds
+    strategy:
+      matrix:
+        target:
+          - core
+          - prog
+          - peri_num_2
+          - peri_num_3
+          - peri_num_5
+          - peri_num_8
+          - peri_num_10
+      fail-fast: false
     runs-on: ubuntu-24.04
     steps:
       - name: checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
       - name: GL test
-        uses: TinyTapeout/tt-gds-action/gl_test@ttgf26a
+        uses: MichaelBell/tt-gds-action/gl_test@ttgf0p3
+        with:
+          make-targets: ${{ matrix.target }}
 
   viewer:
     needs: gds
