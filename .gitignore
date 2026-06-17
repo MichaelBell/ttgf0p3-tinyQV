@@ -4,7 +4,7 @@
 *.fst
 *.fst.hier
 runs
-tt_submission
+gds_render_preview.*
 src/user_config.json
 src/config_merged.json
 test/sim_build

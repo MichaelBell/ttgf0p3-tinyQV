@@ -1,0 +1,7 @@
+{
+  "FLOW_NAME": "LibreLane",
+  "FLOW_VERSION": "3.1.0.dev1",
+  "PDK": "gf180mcuD",
+  "PDK_SOURCE": "open_pdks",
+  "PDK_VERSION": "9233c19260cd813c3fa67dd4594fe4cc67016832"
+}

@@ -67,6 +67,13 @@
   "FALLBACK_SDC_FILE": "dir::base.sdc",
   "SYNTH_AUTONAME": 1,
 
+  "meta": {
+    "flow": "Classic",
+    "substituting_steps": {
+      "+OpenROAD.RepairDesignPostGPL": "BufReplace.ReplaceFanoutDlybWithBuf"
+    }
+  },
+
   "//": "Configuration docs: https://librelane.readthedocs.io/en/latest/reference/configuration.html",
 
   "//": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
