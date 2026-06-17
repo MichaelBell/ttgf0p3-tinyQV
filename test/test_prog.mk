@@ -13,8 +13,8 @@ PROJECT_SOURCES = project.v peri*.v tinyQV/cpu/*.v tinyQV/peri/uart/*.v user_per
 VERILOG_SOURCES += sim_qspi.v
 COMPILE_ARGS +=  -DPROG_FILE=\"$(PROG_FILE)\"
 
-# Local copy of sram test verilog
-#VERILOG_SOURCES += gf180mcu_fd_ip_sram__sram512x8m8wm1.v
+# R2R DAC stub
+VERILOG_SOURCES += $(PWD)/../macros/r2r.vh
 
 ifneq ($(GATES),yes)
 

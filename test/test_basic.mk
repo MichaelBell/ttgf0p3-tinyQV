@@ -6,10 +6,10 @@ SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 WAVES ?= 1
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = project.v peri*.v tinyQV/cpu/*.v tinyQV/peri/uart/*.v user_peripherals/*.v user_peripherals/*/*.v user_peripherals/*/*.sv ../macros/r2r.vh
+PROJECT_SOURCES = project.v peri*.v tinyQV/cpu/*.v tinyQV/peri/uart/*.v user_peripherals/*.v user_peripherals/*/*.v user_peripherals/*/*.sv
 
-# Local copy of sram test verilog
-#VERILOG_SOURCES += gf180mcu_fd_ip_sram__sram512x8m8wm1.v
+# R2R DAC stub
+VERILOG_SOURCES += $(PWD)/../macros/r2r.vh
 
 ifneq ($(GATES),yes)
 
