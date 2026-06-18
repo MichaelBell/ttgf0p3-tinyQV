@@ -38,6 +38,7 @@ module tt_um_MichaelBell_tinyQV #(parameter CLOCK_KHZ=24000) (
     wire       qspi_ram_b_select;
     wire       audio;
     wire       audio_select;
+    wire [7:0] audio_sample;
     assign uio_out = {audio_select ? audio : qspi_ram_b_select, qspi_ram_a_select, qspi_data_out[3:2], 
                       qspi_clk_out, qspi_data_out[1:0], qspi_flash_select};
     assign uio_oe = rst_n ? {2'b11, qspi_data_oe[3:2], 1'b1, qspi_data_oe[1:0], 1'b1} : 8'h00;
@@ -117,6 +118,7 @@ module tt_um_MichaelBell_tinyQV #(parameter CLOCK_KHZ=24000) (
     end
 
     // DAC
+    reg dac_select;
     reg [7:0] dac_data;
 
     // Interrupt requests
@@ -230,6 +232,8 @@ module tt_um_MichaelBell_tinyQV #(parameter CLOCK_KHZ=24000) (
 
         .data_read_complete(read_complete),
 
+        .audio_sample(audio_sample),
+
         .user_interrupts(peri_interrupts)
     );
 
@@ -324,10 +328,13 @@ module tt_um_MichaelBell_tinyQV #(parameter CLOCK_KHZ=24000) (
     assign debug_signal = debug_signals[ui_in[6:3]];
 
     always @(posedge clk) begin
-        if (!rst_reg_n)
+        if (!rst_reg_n) begin
+            dac_select <= 0;
             dac_data <= '0;
-        else if (write_n != 2'b11 && connect_peripheral == PERI_DAC)
-            dac_data <= data_to_write[7:0];
+        end else if (write_n != 2'b11 && connect_peripheral == PERI_DAC) begin
+            dac_data <= data_to_write[8] ? audio_sample : data_to_write[7:0];
+            dac_select <= data_to_write[8];
+        end else if (dac_select) dac_data <= audio_sample;
     end
 
     wire [7:0] dac_buffered;
