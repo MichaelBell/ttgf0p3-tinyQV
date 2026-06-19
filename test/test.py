@@ -230,6 +230,42 @@ async def test_time_limit(dut):
     await send_instr(dut, InstructionLW(x1, x0, -0x100).encode())
     assert start_time+17 <= await read_reg(dut, x1) <= start_time+19
 
+@cocotb.test()
+async def test_dac(dut):
+    if not hasattr(dut.user_project, "i_tinyqv"):
+        # Can't test in GL.
+        return
+    
+    print(hasattr(dut.user_project, "dac_select"))
+
+    dut._log.info("Start")
+
+    clock = Clock(dut.clk, 41.666, unit="ns")
+    cocotb.start_soon(clock.start())
+
+    # Reset
+    await reset(dut)
+
+    # Should start reading flash after 1 cycle
+    await ClockCycles(dut.clk, 1)
+    await start_read(dut, 0)
+
+    # Write DAC
+    await send_instr(dut, InstructionADDI(x1, x0, 0x42).encode())
+    await send_instr(dut, InstructionSW(tp, x1, 0x34).encode())
+    await send_instr(dut, InstructionLW(x1, tp, 0x34).encode())
+    assert await read_reg(dut, x1) == 0x42
+    assert dut.user_project.dac_select.value == 0
+    assert dut.user_project.dac_data.value == 0x42
+
+    # Select Synth
+    await send_instr(dut, InstructionADDI(x1, x0, 0x100).encode())
+    await send_instr(dut, InstructionSW(tp, x1, 0x34).encode())
+    await send_instr(dut, InstructionLW(x1, tp, 0x34).encode())
+    assert await read_reg(dut, x1) == 0x180
+    assert dut.user_project.dac_select.value == 1
+    assert dut.user_project.dac_data.value == 0x80
+
 #@cocotb.test()
 async def test_scratch_memory(dut):
     dut._log.info("Start")

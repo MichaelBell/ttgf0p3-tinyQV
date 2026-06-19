@@ -253,7 +253,7 @@ module tt_um_MichaelBell_tinyQV #(parameter CLOCK_KHZ=24000) (
             PERI_GPIO_OUT_SEL:data_from_read = {24'h0, gpio_out_sel, 6'h0};
             PERI_DEBUG_UART_STATUS: data_from_read = {31'h0, debug_uart_tx_busy};
             PERI_TIME_LIMIT:  data_from_read = {25'h0, time_limit, 2'b11};
-            PERI_DAC:         data_from_read = {24'h0, dac_data};
+            PERI_DAC:         data_from_read = {23'h0, dac_select, dac_data};
             PERI_USER:        data_from_read = peri_data_out;
             default:          data_from_read = 32'hFFFF_FFFF;
         endcase
