@@ -54,7 +54,7 @@ See also [debug docs](debug.md)
 
 | Register | Address | Description |
 | -------- | ------- | ----------- |
-| DAC      | 0x80000034 (RW) | Output level from the DAC, range 0-255. |
+| DAC      | 0x80000034 (RW) | Output level from the DAC, range 0-255. Or set to 256 to see output from the PWL synth on the DAC. |
 
 ### TIME
 
