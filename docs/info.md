@@ -43,7 +43,7 @@ This version also includes Matt Venn's R2R DAC as an additional peripheral
 
 | Register | Address | Description |
 | -------- | ------- | ----------- |
-| ID       | 0x8000008 (R) | Instance of TinyQV: 0x41 (ASCII A) |
+| ID       | 0x8000008 (R) | Instance of TinyQV: GF.3 in ASCII |
 | SEL      | 0x800000C (R/W) | Bits 6-7 enable peripheral output on the corresponding bit on out6-7, otherwise out6-7 is used for debug. |
 | DEBUG_UART_DATA | 0x8000018 (W) | Transmits the byte on the debug UART |
 | STATUS   | 0x800001C (R) | Bit 0 indicates whether the debug UART TX is busy, bytes should not be written to the data register while this bit is set. |
@@ -54,7 +54,7 @@ See also [debug docs](debug.md)
 
 | Register | Address | Description |
 | -------- | ------- | ----------- |
-| DAC      | 0x80000034 (RW) | Output level from the DAC, range 0-255. Or set to 256 to see output from the PWL synth on the DAC. |
+| DAC      | 0x8000034 (RW) | Output level from the DAC, range 0-255. Or set to 256 to see output from the PWL synth on the DAC. |
 
 ### TIME
 
